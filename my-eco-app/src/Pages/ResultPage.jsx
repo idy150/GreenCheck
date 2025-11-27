@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
+/* On import nos icones via react-icones */
 import { FaScaleBalanced } from "react-icons/fa6";
 import { IoIosGitPullRequest } from "react-icons/io";
 import { FaRegImages } from "react-icons/fa";
