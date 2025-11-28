@@ -1,22 +1,18 @@
-
 import { Routes, Route } from "react-router-dom";
-import HomePage from "./Pages/HomePage.jsx";
-import ResultPage from "./Pages/ResultPage.jsx";
-import AdvicePage from "./Pages/AdvicePage.jsx";
-
+import Home from "./pages/Home.jsx";
+import Result from "./pages/Result.jsx";
+import Tips from "./pages/Tips.jsx";
+import Quiz from "./pages/Quiz.jsx";
 
 function App() {
- 
-
   return (
-    <>
-       <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/result" element={<ResultPage />} />
-          <Route path="/advice" element={<AdvicePage />} />
-       </Routes>
-    </>
-  )
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/result" element={<Result />} />
+      <Route path="/tips" element={<Tips />} />
+      <Route path="/quiz" element={<Quiz />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;

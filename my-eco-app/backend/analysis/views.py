@@ -93,6 +93,11 @@ class PageMetrics:
         }
 
 
+def health_check(request):
+    """Simple health check endpoint."""
+    return JsonResponse({"status": "ok", "message": "Backend Green Check is running"})
+
+
 @csrf_exempt
 @require_POST
 def analyze_site(request):
@@ -172,9 +177,23 @@ def _fetch_page_metrics(url: str) -> PageMetrics:
     except RequestException as exc:
         logger.exception("Failed to fetch %s", url)
         if hasattr(exc, "response") and exc.response is not None:
-            raise AnalysisError(
-                f"Impossible d'analyser le site : erreur HTTP {exc.response.status_code}"
-            ) from exc
+            status_code = exc.response.status_code
+            if status_code == 404:
+                raise AnalysisError(
+                    f"Le site demandé n'a pas été trouvé (404). Vérifiez que l'URL est correcte."
+                ) from exc
+            elif status_code == 403:
+                raise AnalysisError(
+                    f"Accès refusé au site (403). Le site bloque peut-être les requêtes automatisées."
+                ) from exc
+            elif status_code >= 500:
+                raise AnalysisError(
+                    f"Le site rencontre une erreur serveur (HTTP {status_code}). Réessayez plus tard."
+                ) from exc
+            else:
+                raise AnalysisError(
+                    f"Impossible d'analyser le site : erreur HTTP {status_code}"
+                ) from exc
         raise AnalysisError(f"Impossible d'analyser le site : {exc}") from exc
 
     weight_kb = round(len(content) / 1024, 2)
